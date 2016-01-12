@@ -1,0 +1,7 @@
+options:
+  output_dir: /home/ubuntu/resources
+optional_resources:
+  pig-x86_64:
+    url: http://apache.rediris.es/pig/pig-0.15.0/pig-0.15.0.tar.gz
+    hash: c52112ca618daaca298cf068e6451449fe946e8dccd812d56f8f537aa275234b
+    hash_type: sha256
