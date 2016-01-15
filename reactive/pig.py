@@ -36,8 +36,6 @@ def missing_hadoop():
 @when('pig.installed', 'hadoop.ready')
 @when_not('pig.configured')
 def configure_pig(*args):
-    from charms.pig import Pig # in lib/charms; not available until after bootstrap
-
     hookenv.status_set('maintenance', 'Setting up pig')
     pig = Pig(get_dist_config(DIST_KEYS))
     pig.setup_pig()
