@@ -1,6 +1,6 @@
 name: apache-pig
 summary: Create MapReduce programs for data warehouse analysis
-maintainer: Andrew McLeod <andrew.mcleod@canonical.com>
+maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: |
   Apache Pig is a platform for creating MapReduce programs used with Hadoop.
   It consists of a high-level language (Pig Latin) for expressing data analysis
