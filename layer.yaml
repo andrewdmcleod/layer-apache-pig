@@ -1,1 +1,16 @@
 includes: ['layer:hadoop-client']
+options:
+  hadoop-client:
+    groups:
+      - 'hadoop'
+      - 'mapred'
+    users:
+      pig:
+        groups: ['hadoop', 'mapred']
+    dirs:
+      pig:
+        path: '/usr/lib/pig'
+        owner: 'pig'
+        group: 'hadoop'
+      pig_conf:
+        path: '/etc/pig/conf'
