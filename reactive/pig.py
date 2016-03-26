@@ -1,7 +1,7 @@
 from charms.reactive import when, when_not
-from charms.reactive import set_state, remove_state
+from charms.reactive import is_state, set_state, remove_state
 from charmhelpers.core import hookenv
-from charms.pig import Pig
+from charms.layer.apache_pig import Pig
 from charms.layer.hadoop_client import get_dist_config
 
 
@@ -16,14 +16,19 @@ def install_pig():
 
 @when('pig.installed')
 @when_not('hadoop.ready')
-def missing_hadoop():
-    hookenv.status_set('blocked', 'Waiting for relation to Hadoop')
+def report_status():
+    hadoop_joined = is_state('hadoop.joined')
+    hadoop_ready = is_state('hadoop.ready')
+    if not hadoop_joined:
+        hookenv.status_set('blocked', 'Waiting for relation to Hadoop Plugin')
+    elif not hadoop_ready:
+        hookenv.status_set('waiting', 'Waiting for Hadoop Plugin to become ready')
 
 
 @when('pig.installed', 'hadoop.ready')
 @when_not('pig.configured')
 def configure_pig(*args):
-    hookenv.status_set('maintenance', 'Setting up pig')
+    hookenv.status_set('maintenance', 'Setting up Apache Pig')
     pig = Pig(get_dist_config())
     pig.setup_pig()
     set_state('pig.configured')
@@ -34,4 +39,4 @@ def configure_pig(*args):
 @when_not('hadoop.ready')
 def stop_pig():
     remove_state('pig.configured')
-    hookenv.status_set('blocked', 'Waiting for Hadoop connection')
+    report_status()
