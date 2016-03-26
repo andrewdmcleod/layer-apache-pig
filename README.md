@@ -13,7 +13,9 @@ This charm supports running Pig in two execution modes:
    mode; you can, optionally, specify it using the -x flag:
    `pig` or `pig -x mapreduce`
 
+
 ## Usage
+
 This charm leverages our pluggable Hadoop model with the `hadoop-plugin`
 interface. This means that you will need to deploy a base Apache Hadoop cluster
 to run Pig. The suggested deployment method is to use the
@@ -22,24 +24,25 @@ bundle. This will deploy the Apache Hadoop platform with a single Apache Pig
 unit that communicates with the cluster by relating to the
 `apache-hadoop-plugin` subordinate charm:
 
-    juju quickstart apache-analytics-pig
+    juju deploy apache-analytics-pig
 
 Alternatively, you may manually deploy the recommended environment as follows:
 
-    juju deploy apache-hadoop-hdfs-master hdfs-master
-    juju deploy apache-hadoop-yarn-master yarn-master
-    juju deploy apache-hadoop-compute-slave compute-slave
+    juju deploy apache-hadoop-namenode namenode
+    juju deploy apache-hadoop-resourcemanager resourcemgr
+    juju deploy apache-hadoop-slave slave
     juju deploy apache-hadoop-plugin plugin
     juju deploy apache-pig pig
 
-    juju add-relation yarn-master hdfs-master
-    juju add-relation compute-slave yarn-master
-    juju add-relation compute-slave hdfs-master
-    juju add-relation plugin yarn-master
-    juju add-relation plugin hdfs-master
+    juju add-relation resourcemgr namenode
+    juju add-relation namenode slave
+    juju add-relation resourcemgr slave
+    juju add-relation plugin namenode
+    juju add-relation plugin resourcemgr
     juju add-relation pig plugin
 
 ### Local Mode
+
 Once deployment is complete, run Pig in local mode on the Pig unit with the
 following:
 
@@ -47,6 +50,7 @@ following:
     pig -x local
 
 ### MapReduce Mode
+
 MapReduce mode is the default for Pig. To run in this mode, ssh to the Pig unit
 and run pig as follows:
 
@@ -57,6 +61,7 @@ and run pig as follows:
 ## Testing the deployment
 
 ### Smoke test Local Mode
+
 SSH to the Pig unit and run pig as follows:
 
     juju ssh pig/0
@@ -65,6 +70,7 @@ SSH to the Pig unit and run pig as follows:
     exit
 
 ### Smoke test MapReduce Mode
+
 SSH to the Pig unit and test in MapReduce mode as follows:
 
     juju ssh pig/0
