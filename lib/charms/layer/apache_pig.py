@@ -1,29 +1,21 @@
 import jujuresources
 from jujubigdata import utils
-from charmhelpers.core import unitdata
 
 
 class Pig(object):
     def __init__(self, dist_config):
         self.dist_config = dist_config
         self.resources = {
-            'pig': 'pig-%s' % utils.cpu_arch(),
+            'pig': 'pig-noarch',
         }
         self.verify_resources = utils.verify_resources(*self.resources.values())
 
-    def is_installed(self):
-        return unitdata.kv().get('pig.installed')
-
     def install(self, force=False):
-        if not force and self.is_installed():
-            return
         self.dist_config.add_users()
         self.dist_config.add_dirs()
         jujuresources.install(self.resources['pig'],
                               destination=self.dist_config.path('pig'),
                               skip_top_level=True)
-        #self.setup_pig_config()
-        unitdata.kv().set('pig.installed', True)
 
     def setup_pig(self):
         '''
