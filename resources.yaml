@@ -1,5 +1,13 @@
 options:
   output_dir: /home/ubuntu/resources
+resources:
+  java-installer:
+    # This is the same installer used by hadoop-base. We include it here so
+    # pig can be run in local mode (which requires java) without Hadoop.
+    # NOTE: this goes away if/when we support the java interface.
+    url: https://s3.amazonaws.com/jujubigdata/common/noarch/java-installer-a4d52ba0.sh
+    hash: a4d52ba0eac9dc949baf28ac5235402bdb2b5bd92f239d75b6959ace8a25da6c
+    hash_type: sha256
 optional_resources:
   pig-noarch:
     url: https://s3.amazonaws.com/jujubigdata/apache/noarch/pig-0.15.0-c52112ca.tgz
