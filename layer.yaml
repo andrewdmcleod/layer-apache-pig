@@ -1,4 +1,4 @@
-repo: git@github.com:juju-solutions/layer-apache-git.git
+repo: git@github.com:juju-solutions/layer-apache-pig.git
 includes: ['layer:hadoop-client']
 options:
   hadoop-client:
