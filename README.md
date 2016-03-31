@@ -16,35 +16,18 @@ This charm supports running Pig in two execution modes:
 
 ## Usage
 
-This charm leverages our pluggable Hadoop model with the `hadoop-plugin`
-interface. This means that you will need to deploy a base Apache Hadoop cluster
-to run Pig. The suggested deployment method is to use the
-[apache-analytics-pig](https://jujucharms.com/apache-analytics-pig/)
-bundle. This will deploy the Apache Hadoop platform with a single Apache Pig
-unit that communicates with the cluster by relating to the
-`apache-hadoop-plugin` subordinate charm:
+This charm is intended to be deployed via the
+[apache-analytics-pig](https://jujucharms.com/apache-analytics-pig) bundle:
 
-    juju deploy apache-analytics-pig
+    juju quickstart apache-analytics-pig
 
-Alternatively, you may manually deploy the recommended environment as follows:
-
-    juju deploy apache-hadoop-namenode namenode
-    juju deploy apache-hadoop-resourcemanager resourcemgr
-    juju deploy apache-hadoop-slave slave
-    juju deploy apache-hadoop-plugin plugin
-    juju deploy apache-pig pig
-
-    juju add-relation resourcemgr namenode
-    juju add-relation namenode slave
-    juju add-relation resourcemgr slave
-    juju add-relation plugin namenode
-    juju add-relation plugin resourcemgr
-    juju add-relation pig plugin
+This will deploy the Apache Hadoop platform with Apache Pig available to
+execute Pig Latin jobs on your data. Once deployment is complete, you can run
+Pig in a variety of modes:
 
 ### Local Mode
 
-Once deployment is complete, run Pig in local mode on the Pig unit with the
-following:
+Run Pig in local mode on the Pig unit with the following:
 
     juju ssh pig/0
     pig -x local
@@ -58,29 +41,33 @@ and run pig as follows:
     pig
 
 
-## Testing the deployment
+## Status and Smoke Test
 
-### Smoke test Local Mode
+The services provide extended status reporting to indicate when they are ready:
 
-SSH to the Pig unit and run pig as follows:
+    juju status --format=tabular
 
-    juju ssh pig/0
-    pig -x local
-    quit
-    exit
+This is particularly useful when combined with `watch` to track the on-going
+progress of the deployment:
 
-### Smoke test MapReduce Mode
+    watch -n 0.5 juju status --format=tabular
 
-SSH to the Pig unit and test in MapReduce mode as follows:
+The message for each unit will provide information about that unit's state.
+Once they all indicate that they are ready, you can perform a "smoke test"
+to verify that Spark is working as expected using the built-in `smoke-test`
+action:
 
-    juju ssh pig/0
-    hdfs dfs -mkdir -p /user/ubuntu
-    hdfs dfs -copyFromLocal /etc/passwd /user/ubuntu/passwd
-    echo "A = load '/user/ubuntu/passwd' using PigStorage(':');" > /tmp/test.pig
-    echo "B = foreach A generate \$0 as id; store B into '/tmp/pig.out';" >> /tmp/test.pig
-    pig -l /tmp/test.log /tmp/test.pig
-    hdfs dfs -cat /tmp/pig.out/part-m-00000
-    exit
+    juju action do pig/0 smoke-test
+
+After a few seconds or so, you can check the results of the smoke test:
+
+    juju action status
+
+You will see `status: completed` if the smoke test was successful, or
+`status: failed` if it was not.  You can get more information on why it failed
+via:
+
+    juju action fetch <action-id>
 
 
 ## Contact Information

@@ -1,17 +1,10 @@
-repo: git@github.com:juju-solutions/layer-apache-git.git
+repo: git@github.com:juju-solutions/layer-apache-pig.git
 includes: ['layer:hadoop-client']
 options:
   hadoop-client:
-    groups:
-      - 'hadoop'
-      - 'mapred'
-    users:
-      pig:
-        groups: ['hadoop', 'mapred']
     dirs:
       pig:
         path: '/usr/lib/pig'
-        owner: 'pig'
-        group: 'hadoop'
       pig_conf:
         path: '/etc/pig/conf'
+    silent: True
