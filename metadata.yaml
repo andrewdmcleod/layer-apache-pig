@@ -12,3 +12,4 @@ provides:
   hadoop:
     interface: hadoop-plugin
     scope: container
+series: ['xenial', 'trusty']
